@@ -1,0 +1,32 @@
+{% load i18n %}
+{% load humanize static %}
+{% load thumbnail %}
+
+<li class="infinite-item card" news-id="{{ tweet.id }}">
+  <div class="card-body">
+    <div class="profile-picture">
+      {% thumbnail tweet.user.picture "x60" as im %}
+        <img src="{{ im.url }}" class="pull-left" style="border-radius: 50%;" alt="{% trans 'User Image' %}" class="user-image">
+      {% empty %}
+        <img src="{% static 'img/user.png' %}" class="pull-left" height="60px" alt="{% trans 'No Profile Picture' %}" />
+      {% endthumbnail %}
+    </div>
+    <div class="post">
+      <p>
+        <strong>
+          <a href="{% url 'tweet:tweets' tweet.user.username  %}">{{ tweet.user.get_profile_name|title }}</a>
+        </strong>
+      </p>
+      <p>{{ tweet }}</p>
+      {% if tweet.image %}
+        <img class="card-img-top" src="{{ tweet.image }}" alt="Card image cap">
+      {% endif %}
+    </div>
+  </div>
+  <div class="interaction" id="interaction">
+    <a href="#" class="comment"><i class="fa fa-comment-o" aria-hidden="true"></i>
+      <span class="comment-count">{{ tweet.count_thread }}</span>
+    </a>
+    <span class="timestamp">{{ tweet.timestamp|naturaltime }}</span>
+  </div>
+</li>

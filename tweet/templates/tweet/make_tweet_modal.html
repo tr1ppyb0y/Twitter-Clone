@@ -1,0 +1,55 @@
+{% load i18n %}
+
+<div class="modal fade" id="makeTweet" tabindex="-1" role="dialog" aria-labelledby="tweetFormModalTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{% trans "What's happening?" %}</h5>
+        <h5>{{ user }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST">
+          {% csrf_token %}
+          <div class="form-group">
+            <textarea id="tweetInput" name="post" rows="3" class="form-control" maxlength="280"></textarea>
+            <span id="tweetCounter" class="pull-right">280</span>
+          </div>
+          <div class="modal-footer">
+        <button type="button" id="tweet-me" class="btn btn-primary">
+          <i class="fa fa-paper-plane" aria-hidden="true"></i> {% trans 'Tweet' %}
+        </button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Cancel' %}</button>
+      </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% block script %}
+
+  <script type="text/javascript">
+    window.CSRF_TOKEN = "{{ csrf_token }}";
+   document.getElementById("tweet-me").addEventListener("click", tweetMe);
+   function tweetMe(){
+      let tweet = document.getElementById("tweetInput").value;
+      console.log(tweet);
+      let post_url = window.location.href + "";
+      post_url = post_url.split("/");
+      let redirect = window.location.href + "";
+      redirect = redirect.split("/");
+      redirect.pop();
+      post_url[post_url.length-1] = 'tweet-it';
+      post_url = post_url.join('/');
+      post_url += '/{{ user }}';
+      redirect = redirect.join('/')
+      redirect += '/{{ user }}';
+      $.post(post_url, {csrfmiddlewaretoken: window.CSRF_TOKEN,sent:tweet}, function(data){
+        window.location.href = redirect;
+      });
+   }
+  </script>
+
+{% endblock script %}

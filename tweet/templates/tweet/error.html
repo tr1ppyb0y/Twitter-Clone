@@ -1,0 +1,31 @@
+{% extends 'user/basev1.html' %}
+
+{% block content %}
+<h3>User does not exists!!</h3>
+{% endblock %}
+
+
+{% block modal %}
+<script type="text/javascript">
+  function searchKeyPress(e){
+    // look for window.event in case event isn't passed in
+    e = e || window.event;
+    if (e.keyCode == 13)
+    {
+        document.getElementById('search_button').click();
+        return false;
+    }
+    return true;
+}
+</script>
+
+<script type="text/javascript">
+  document.getElementById("search_button").addEventListener("click", myFunction);
+function myFunction(data){
+  var user_data = document.getElementById("search").value;
+  $.get(user_data, function(data){
+    window.location.href = user_data;
+  });
+}
+</script>
+{% endblock %}
